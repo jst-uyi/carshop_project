@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Available Cars{% endblock %}
+
+{% block content %}
+
+
+<!DOCTYPE html>
+<html>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Available Cars</h1>
+        <!-- Search & Filter Form -->
+        <form method="get" class="row g-2 mb-4 align-items-end">
+            <!-- Search -->
+            <div class="col-md-3">
+                <input type="text" 
+                       class="form-control" 
+                       name="search" 
+                       placeholder="Search by name or description..."
+                       value="{{ search_query }}">
+            </div>
+            <!-- Car Name/Model Filter -->
+            <div class="col-md-2">
+                <select class="form-select" name="car_name">
+                    <option value="">All Cars</option>
+                    {% for name in car_names %}
+                    <option value="{{ name }}" {% if name == selected_car_name %}selected{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Fuel Type Filter -->
+            <div class="col-md-2">
+                <select class="form-select" name="fuel_type">
+                    <option value="">All Fuel Types</option>
+                    {% for fuel in fuel_types %}
+                    <option value="{{ fuel }}" {% if fuel == selected_fuel %}selected{% endif %}>{{ fuel }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Owner Type Filter -->
+            <div class="col-md-2">
+                <select class="form-select" name="owner_type">
+                    <option value="">All Owner Types</option>
+                    {% for owner in owner_types %}
+                    <option value="{{ owner }}" {% if owner == selected_owner %}selected{% endif %}>{{ owner }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Location Filter -->
+            <div class="col-md-2">
+                <select class="form-select" name="location">
+                    <option value="">All Locations</option>
+                    {% for loc in locations %}
+                    <option value="{{ loc }}" {% if loc == selected_location %}selected{% endif %}>{{ loc }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Year Filter -->
+            <div class="col-md-1">
+                <select class="form-select" name="year">
+                    <option value="">Years</option>
+                    {% for y in years %}
+                    <option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>{{ y }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Submit and Reset -->
+            <div class="col-md-12 mt-2 d-flex gap-2">
+                <button class="btn btn-primary" type="submit">
+                    <i class="bi bi-search"></i> Filter
+                </button>
+                <a href="{% url 'car_list' %}" class="btn btn-outline-secondary">
+                    Reset Filters
+                </a>
+            </div>
+        </form>
+        {% if search_query %}
+            <p class="text-muted mb-3">
+                Showing results for: <strong>"{{ search_query }}"</strong>
+                ({{ cars.count }} cars found)
+            </p>
+        {% endif %}
+        <div class="row">
+            {% for car in cars %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img src="{{ car.image_url }}" class="card-img-top" alt="{{ car.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ car.name }}</h5>
+                        <p class="card-text">{{ car.description }}</p>
+                        <p class="text-success">${{ car.price }}</p>
+                        <span class="badge bg-primary">{{ car.fuel_type }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

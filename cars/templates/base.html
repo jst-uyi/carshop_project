@@ -1,0 +1,237 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Shop - {% block title %}{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'cars/css/style.css' %}">
+    {% block extra_css %}{% endblock %}  
+</head>
+<body class>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="bi bi-car-front"></i> Car Shop
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <span class="nav-link">Welcome, {{ user.username }}!</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">
+                            <i class="bi bi-person-plus"></i> Register
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Hero Section -->
+    <header class="hero bg-primary text-white text-center py-5">
+        <div class="container">
+            <h1 class="display-4">Find Your Dream Car</h1>
+            <p class="lead">Your one-stop destination for quality vehicles.</p>
+            <a href="{% url 'car_list' %}" class="btn btn-light btn-lg">Browse Cars</a>
+        </div>
+    </header>
+   
+
+    <!-- Main Content -->
+    <main class="flex-shrink-0">
+        <div class="container mt-4">
+            <!-- Messages -->
+            {% if messages %}
+            <div class="row">
+                <div class="col-md-12">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Content Block -->
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+    <!--PREVIOUS-->
+
+<section class="py-5 bg-white">
+    <div class="container">
+        <h2 class="text-center mb-5">What Our Customers Say</h2>
+        <div class="row">
+            <!-- Testimonial 1 -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                        </div>
+                        <p class="card-text">"Found my dream car at an amazing price!"</p>
+                        <div class="mt-auto">
+                            <p class="fw-bold mb-0">- Sarah J.</p>
+                            <small class="text-muted">Verified Buyer</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonial 2 -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star text-warning"></i>
+                        </div>
+                        <p class="card-text">"Customer service was top-notch from start to finish."</p>
+                        <div class="mt-auto">
+                            <p class="fw-bold mb-0">- Maxine A.</p>
+                            <small class="text-muted">Repeat Customer</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonial 3 -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-half text-warning"></i>
+                        </div>
+                        <p class="card-text">"Smooth experience and a great selection of vehicles."</p>
+                        <div class="mt-auto">
+                            <p class="fw-bold mb-0">- P D.</p>
+                            <small class="text-muted">First-Time Buyer</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<!--Footer-->
+<footer class="bg-dark text-white pt-5 pb-3">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Quick Links -->
+            <div class="col-lg-3 col-md-6">
+                <h5 class="text-uppercase mb-4">Car Shop</h5>
+                <p>Your trusted partner for quality vehicles since 2010.</p>
+                <div class="social-icons mt-4">
+                    <a href="#" class="text-white me-3"><i class="bi bi-facebook fs-4"></i></a>
+                    <a href="#" class="text-white me-3"><i class="bi bi-twitter-x fs-4"></i></a>
+                    <a href="#" class="text-white me-3"><i class="bi bi-instagram fs-4"></i></a>
+                    <a href="#" class="text-white me-3"><i class="bi bi-linkedin fs-4"></i></a>
+                    <a href="#" class="text-white"><i class="bi bi-youtube fs-4"></i></a>
+                </div>
+            </div>
+
+            <!-- Customer Service -->
+            <div class="col-lg-3 col-md-6">
+                <h5 class="text-uppercase mb-4">Help Center</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">FAQs</a></li>
+                    <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Buying Guide</a></li>
+                    <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Financing Options</a></li>
+                    <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Shipping Information</a></li>
+                </ul>
+            </div>
+
+            <!-- Company -->
+            <div class="col-lg-3 col-md-6">
+                <h5 class="text-uppercase mb-4">Company</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="{% url 'about' %}" class="text-white-50 text-decoration-none">About Us</a></li>
+                    <li class="mb-2"><a href="{% url 'blog' %}" class="text-white-50 text-decoration-none">Blog</a></li>
+                    <li class="mb-2"><a href="{% url 'careers' %}" class="text-white-50 text-decoration-none">Careers</a></li>
+                    <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Press</a></li>
+                </ul>
+            </div>
+
+            <!-- Legal & Contact -->
+            <div class="col-lg-3 col-md-6">
+                <h5 class="text-uppercase mb-4">Legal</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="{% url 'terms' %}" class="text-white-50 text-decoration-none">Terms of Use</a></li>
+                    <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Privacy Policy</a></li>
+                </ul>
+                
+                <h5 class="text-uppercase mt-4 mb-3">Contact Us</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="bi bi-telephone me-2"></i> +44 7923409781 </li>
+                    <li class="mb-2"><i class="bi bi-envelope me-2"></i> info@carshop.com</li>
+                    <li><i class="bi bi-geo-alt me-2"></i> 123 Auto Mall, Aberdeen, UK</li>
+                </ul>
+            </div>
+        </div>
+
+        <hr class="my-4 bg-secondary">
+
+        <div class="row">
+            <div class="col-md-6 text-center text-md-start">
+                <p class="small mb-0">&copy; {% now "Y" %} Car Shop. All rights reserved.</p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <p class="small mb-0">
+                    <a href="#" class="text-white-50 text-decoration-none">Sitemap</a> | 
+                    <a href="#" class="text-white-50 text-decoration-none">Accessibility</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}{% endblock %}  <!-- Optional: for page-specific JS -->
+</body>
+</html>
+
+
+

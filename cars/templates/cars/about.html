@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About Us{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-hero {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                    url('{% static "cars/images/about.jpeg" %}');
+        background-size: cover;
+        background-position: center;
+        height: 60vh;
+    }
+    .timeline {
+        position: relative;
+        padding-left: 50px;
+    }
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 20px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #0d6efd;
+    }
+    .timeline-item {
+        position: relative;
+        margin-bottom: 30px;
+    }
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -40px;
+        top: 5px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #0d6efd;
+        border: 3px solid white;
+    }
+    .team-card:hover .team-img {
+        transform: scale(1.05);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="about-hero d-flex align-items-center">
+    <div class="container text-white">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h1 class="display-3 fw-bold">Our Story</h1>
+                <p class="lead">Driving excellence since 2010</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mission Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="fw-bold mb-4">Our Mission</h2>
+                <p class="lead">To redefine car buying with transparency, quality, and exceptional service.</p>
+                <p>At CarShop, we believe everyone deserves a stress-free car buying experience. Our no-haggle pricing and certified pre-owned vehicles take the uncertainty out of purchasing your next car.</p>
+            </div>
+            <div class="col-lg-6">
+                <img src="{% static 'cars/images/background.jpg' %}" class="img-fluid rounded shadow" alt="Our Showroom">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Timeline Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Our Journey</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <h4>2010</h4>
+                <p>Founded in Detroit with just 10 cars in our lot</p>
+            </div>
+            <div class="timeline-item">
+                <h4>2014</h4>
+                <p>Opened our second location in Chicago</p>
+            </div>
+            <div class="timeline-item">
+                <h4>2018</h4>
+                <p>Launched our online buying platform</p>
+            </div>
+            <div class="timeline-item">
+                <h4>2023</h4>
+                <p>Recognized as "Best Dealership" by Auto News</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Meet Our Team</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="overflow-hidden" style="height: 250px;">
+                        <img src="{% static 'cars/images/team1.jpg' %}" class="team-img w-100 h-100 object-fit-cover transition" alt="CEO">
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="mb-1">Steven Osamuyime</h5>
+                        <p class="text-muted">CEO & Founder</p>
+                        <p class="small">"Building trust is our top priority"</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="overflow-hidden" style="height: 250px;">
+                        <img src="{% static 'cars/images/team2.jpg' %}" class="team-img w-100 h-100 object-fit-cover transition" alt="Sales Director">
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="mb-1">Nkere Brown</h5>
+                        <p class="text-muted">Sales Director</p>
+                        <p class="small">"Helping you find the perfect match"</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="overflow-hidden" style="height: 250px;">
+                        <img src="{% static 'cars/images/team3.jpg' %}" class="team-img w-100 h-100 object-fit-cover transition" alt="Service Manager">
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="mb-1">Nosa Caleb</h5>
+                        <p class="text-muted">Service Manager</p>
+                        <p class="small">"Your car deserves the best care"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3">
+                <h3 class="display-4 fw-bold">10K+</h3>
+                <p>Happy Customers</p>
+            </div>
+            <div class="col-md-3">
+                <h3 class="display-4 fw-bold">500+</h3>
+                <p>Vehicles in Stock</p>
+            </div>
+            <div class="col-md-3">
+                <h3 class="display-4 fw-bold">12</h3>
+                <p>Years in Business</p>
+            </div>
+            <div class="col-md-3">
+                <h3 class="display-4 fw-bold">24/7</h3>
+                <p>Customer Support</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to experience the CarShop difference?</h2>
+        <a href="{% url 'car_list' %}" class="btn btn-outline-primary btn-lg px-4">Browse Inventory</a>
+    </div>
+</section>
+{% endblock %}
