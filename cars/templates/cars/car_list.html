@@ -86,12 +86,23 @@
             {% for car in cars %}
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
-                    <img src="{{ car.image_url }}" class="card-img-top" alt="{{ car.name }}">
+                    {% if car.image %}
+                    <img src="{{ car.image.url }}" alt="{{ car.name }}">
+                {% else %}
+                    <img src="{% static 'images/placeholder.png' %}" alt="No image available">
+                {% endif %}
                     <div class="card-body">
                         <h5 class="card-title">{{ car.name }}</h5>
                         <p class="card-text">{{ car.description }}</p>
                         <p class="text-success">${{ car.price }}</p>
                         <span class="badge bg-primary">{{ car.fuel_type }}</span>
+                        <span class="badge bg-secondary">{{ car.owner_type }}</span>
+                        <span class="badge bg-info">{{ car.location }}</span>
+                        <span class="badge bg-light text-dark">{{ car.year }}</span>
+
+                        <a href="{% url 'purchase_car' car.id %}" class="btn btn-success mt-3">
+                            Purchase
+                        </a>
                     </div>
                 </div>
             </div>

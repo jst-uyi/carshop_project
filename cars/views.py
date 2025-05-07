@@ -1,12 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
-from .models import Car  
+from .models import Car, Order  
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
-
+from django.urls import reverse
 
 
 def car_list(request):
@@ -127,3 +127,34 @@ def contact(request):
         # Add form handling logic later
         pass
     return render(request, 'cars/contact.html', {'title': 'Contact Us'})
+
+@login_required(login_url='/login/')
+def purchase_car(request, car_id):
+    car = get_object_or_404(Car, id=car_id)
+    
+    if request.method == 'POST':
+        # Create order
+        order = Order.objects.create(
+            user=request.user,
+            car=car,
+            total_price=car.price,
+            status='pending'
+        )
+        
+        # In a real app, you would integrate with a payment gateway here
+        # For now, we'll simulate a successful payment
+        order.status = 'completed'
+        order.save()
+        
+        car.available = False
+        car.save()
+        
+        messages.success(request, f"Congratulations! You've purchased the {car.name}")
+        return redirect('order_confirmation', order_id=order.id)
+    
+    return render(request, 'cars/purchase.html', {'car': car})
+
+@login_required
+def order_confirmation(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    return render(request, 'cars/order_confirmation.html', {'order': order})

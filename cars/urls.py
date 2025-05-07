@@ -10,5 +10,8 @@ urlpatterns = [
     path('blog/', views.blog, name='blog'),
     path('careers/', views.careers, name='careers'),
     path('terms/', views.terms, name='terms'),
+
+    path('car/<int:car_id>/purchase/', views.purchase_car, name='purchase_car'),
+    path('order/<int:order_id>/confirmation/', views.order_confirmation, name='order_confirmation'),
    
 ]
