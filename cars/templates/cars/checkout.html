@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2>Checkout</h2>
+    <p>Review your order before proceeding to payment.</p>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Car</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart_items %}
+            <tr>
+                <td>{{ item.car.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.car.price }}</td>
+                <td>${{ item.get_total_price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h4>Total Price: ${{ total_price }}</h4>
+    <div class="d-flex justify-content-end">
+        <a href="{% url 'cart' %}" class="btn btn-outline-secondary me-2">Back to Cart</a>
+        <a href="{% url 'confirm_purchase' %}" class="btn btn-success">Confirm Purchase</a>
+    </div>
+</div>
+{% endblock %}

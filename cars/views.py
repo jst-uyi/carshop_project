@@ -2,12 +2,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
-from .models import Car, Order  
-from django.db.models import Q
+from .models import Car, Order, Order_summary, OrderItem 
+from django.db.models import Q, Sum, Count
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.urls import reverse
-
+from django.contrib.admin.views.decorators import staff_member_required
+from .models import CartItem
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+from .forms import EditProfileForm
 
 def car_list(request):
     # Get filter parameters from the request
@@ -140,10 +144,17 @@ def purchase_car(request, car_id):
             total_price=car.price,
             status='pending'
         )
+        street_address = request.POST.get('street_address')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+        postal_code = request.POST.get('postal_code')
+        country = request.POST.get('country')
+        phone_number = request.POST.get('phone_number')
+    
         
-        # In a real app, you would integrate with a payment gateway here
+        # would integrate with a payment gateway here if it were a real purchase
         # For now, we'll simulate a successful payment
-        order.status = 'completed'
+        order.status == 'completed'
         order.save()
         
         car.available = False
@@ -157,4 +168,105 @@ def purchase_car(request, car_id):
 @login_required
 def order_confirmation(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'cars/order_confirmation.html', {'order': order})
+
+@login_required
+def order_history(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'cars/order_history.html', {'orders': orders})
+
+
+
+@staff_member_required
+def admin_dashboard(request):
+    total_sales = Order.objects.count()
+    total_cars = Car.objects.count()
+    total_revenue = OrderItem.objects.aggregate(total=Sum('car__price'))['total'] or 0
+
+    monthly_sales = (
+    Order.objects
+    .values('created_at__month')
+    .annotate(revenue=Sum('items__car__price'))
+    .order_by('created_at__month')
+ )
+
+    context = {
+        'total_sales': total_sales,
+        'total_cars': total_cars,
+        'total_revenue': total_revenue,
+        'monthly_sales': monthly_sales,
+    }
+    return render(request, 'admin_dashboard.html', context)
+
+
+
+
+@login_required
+def cart(request):
+    items = CartItem.objects.filter(user=request.user)
+    total = sum(item.get_total_price() for item in items)
+    return render(request, 'cars/cart.html', {'items': items, 'total': total})
+
+@login_required(login_url='/login/')
+def add_to_cart(request, car_id):
+    car = get_object_or_404(Car, id=car_id)
+    item, created = CartItem.objects.get_or_create(user=request.user, car=car)
+    if not created:
+        item.quantity += 1
+        item.save()
+    return redirect('cart')
+
+@login_required
+def remove_from_cart(request, item_id):
+    item = get_object_or_404(CartItem, id=item_id, user=request.user)
+    item.delete()
+    return redirect('cart')
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            user = form.save(commit=False)
+            password = form.cleaned_data.get('password')
+            if password:
+                user.set_password(password)
+            user.save()
+            logout(request)
+            messages.success(request, "Profile updated successfully. Please log in again.")
+            return redirect('login')
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = EditProfileForm(instance=request.user)
+    
+    return render(request, 'cars/edit_profile.html', {'form': form})
+
+
+@login_required
+def checkout(request):
+    cart_items = CartItem.objects.filter(user=request.user)
+    if not cart_items:
+        return redirect('cart')  # Redirect to cart if it's empty
+
+    total_price = sum(item.get_total_price() for item in cart_items)
+    return render(request, 'cars/checkout.html', {'cart_items': cart_items, 'total_price': total_price})
+
+
+@login_required
+def confirm_purchase(request):
+    cart_items = CartItem.objects.filter(user=request.user)
+    if not cart_items:
+        return redirect('cart')  # Redirect to cart if it's empty
+
+    # Create orders for each cart item
+    for item in cart_items:
+        Order.objects.create(
+            user=request.user,
+            car=item.car,
+            total_price=item.get_total_price(),
+            status='pending'
+        )
+    cart_items.delete()  # Clear the cart after purchase
+    return render(request, 'cars/order_confirmation.html')  # Render a confirmation page

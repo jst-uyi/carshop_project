@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">Admin Dashboard</h2>
+
+    <div class="row text-center mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5>Total Sales</h5>
+                    <h3>{{ total_sales }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5>Total Cars</h5>
+                    <h3>{{ total_cars }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-end mb-4">
+        <a href="/admin/cars/car/" class="btn btn-outline-primary">Manage Cars</a>
+    </div>
+
+    <canvas id="salesChart" width="400" height="200"></canvas>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    const salesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{% for m in monthly_sales %}"Month {{ m.created_at__month }}",{% endfor %}],
+            datasets: [{
+                label: 'Revenue by Month',
+                data: [{% for m in monthly_sales %}{{ m.revenue }},{% endfor %}],
+                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        }
+    });
+</script>
+{% endblock %}
