@@ -25,5 +25,7 @@ urlpatterns = [
     path('edit-profile/', views.edit_profile, name='edit_profile'),
     path('checkout/', views.checkout, name='checkout'),
     path('confirm-purchase/', views.confirm_purchase, name='confirm_purchase'),  
+
+    path('admin-dashboard/order/<int:order_id>/', views.order_detail, name='order_detail'),
    
 ]

@@ -8,10 +8,15 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
-from .models import CartItem
+from .models import CartItem, Order
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from .forms import EditProfileForm
+from django.utils import timezone
+from datetime import timedelta
+from django.db import models
+import json
+from django.utils.safestring import mark_safe
 
 def car_list(request):
     # Get filter parameters from the request
@@ -176,26 +181,63 @@ def order_history(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'cars/order_history.html', {'orders': orders})
 
+def order_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    return render(request, 'cars/order_detail.html', {'order': order})
+
 
 
 @staff_member_required
 def admin_dashboard(request):
     total_sales = Order.objects.count()
     total_cars = Car.objects.count()
-    total_revenue = OrderItem.objects.aggregate(total=Sum('car__price'))['total'] or 0
+    total_users = User.objects.count()
+    total_revenue = Order.objects.aggregate(total=Sum('total_price'))['total'] or 0
 
-    monthly_sales = (
-    Order.objects
-    .values('created_at__month')
-    .annotate(revenue=Sum('items__car__price'))
-    .order_by('created_at__month')
- )
+    # Get the filter parameter from the request
+    time_period = request.GET.get('time_period', 'monthly')  # Default to 'monthly'
+
+    # Calculate revenue based on the selected time period
+    if time_period == 'weekly':
+        revenue_data = (
+            Order.objects
+            .annotate(week=models.functions.ExtractWeek('created_at'))
+            .values('week')
+            .annotate(revenue=Sum('total_price'))
+            .order_by('week')
+        )
+        labels = [f"Week {entry['week']}" for entry in revenue_data]
+        data = [entry['revenue'] for entry in revenue_data]
+    elif time_period == 'yearly':
+        revenue_data = (
+            Order.objects
+            .annotate(year=models.functions.ExtractYear('created_at'))
+            .values('year')
+            .annotate(revenue=Sum('total_price'))
+            .order_by('year')
+        )
+        labels = [f"Year {entry['year']}" for entry in revenue_data]
+        data = [entry['revenue'] for entry in revenue_data]
+    else:  # Default to monthly
+        revenue_data = (
+            Order.objects
+            .annotate(month=models.functions.ExtractMonth('created_at'))
+            .values('month')
+            .annotate(revenue=Sum('total_price'))
+            .order_by('month')
+        )
+        labels = [f"Month {entry['month']}" for entry in revenue_data]
+        data = [entry['revenue'] for entry in revenue_data]
 
     context = {
         'total_sales': total_sales,
         'total_cars': total_cars,
+        'total_users': total_users,
         'total_revenue': total_revenue,
-        'monthly_sales': monthly_sales,
+        'recent_orders': Order.objects.all().order_by('-created_at')[:10],
+        'labels': labels,  
+        'data': data,  
+        'time_period': time_period,  
     }
     return render(request, 'admin_dashboard.html', context)
 
@@ -269,4 +311,24 @@ def confirm_purchase(request):
             status='pending'
         )
     cart_items.delete()  # Clear the cart after purchase
-    return render(request, 'cars/order_confirmation.html')  # Render a confirmation page
+    return render(request, 'cars/order_confirmation.html')  
+#i changed here 
+@login_required
+def order_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    status_choices = Order._meta.get_field('status').choices  # Retrieve the choices for the status field
+
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        if new_status in dict(status_choices):  # Validate the new status
+            order.status = new_status
+            order.save()
+            messages.success(request, "Order status updated successfully.")
+            return redirect('order_detail', order_id=order.id)
+        else:
+            messages.error(request, "Invalid status selected.")
+
+    return render(request, 'cars/order_detail.html', {
+        'order': order,
+        'status_choices': status_choices,
+    })

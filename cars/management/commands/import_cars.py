@@ -37,7 +37,6 @@ class Command(BaseCommand):
                         power=row['power'],
                         seats=row['seats'],
                         price=row['price'],
-                        #image_url=row['image_url'],
-                        #description=row.get('description', '')
+                        
                     )
         self.stdout.write(self.style.SUCCESS('Successfully imported cars!'))

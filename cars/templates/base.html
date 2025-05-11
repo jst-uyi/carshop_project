@@ -51,11 +51,23 @@
         </div>
     </nav>
     <!-- Hero Section -->
-    <header class="hero bg-primary text-white text-center py-5">
+    <header class="hero text-white text-center py-5" style="
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(30, 37, 163, 0.769)), 
+                url('{% static "cars/images/hero.jpeg" %}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+">
         <div class="container">
             <h1 class="display-4">Find Your Dream Car</h1>
             <p class="lead">Your one-stop destination for quality vehicles.</p>
-            <a href="{% url 'car_list' %}" class="btn btn-light btn-lg">Browse Cars</a>
+            <a href="{% url 'car_list' %}" class="btn btn-outline-light btn-lg">Browse Cars</a>
         </div>
     </header>
    
