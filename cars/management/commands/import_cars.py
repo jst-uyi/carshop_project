@@ -21,22 +21,23 @@ class Command(BaseCommand):
             if missing_columns:
                 raise ValueError(f'Missing columns in CSV: {", ".join(missing_columns)}')
             for row in reader:
-                print(row)
-                if row['serial_number'].isdigit():
-                    Car.objects.create(
-                        serial_number=row['serial_number'],
-                        name=row['name'],
-                        location=row['location'],
-                        year=row['year'],
-                        kilometers=row['kilometers'],
-                        fuel_type=row['fuel_type'],
-                        transmission=row['transmission'],
-                        owner_type=row['owner_type'],
-                        mileage=row['mileage'].strip(),
-                        engine=row['engine'],
-                        power=row['power'],
-                        seats=row['seats'],
-                        price=row['price'],
-                        
-                    )
+                    try:
+                        Car.objects.create(
+                            #serial_number=row['serial_number'],
+                            name=row['name'],
+                            location=row['location'],
+                            year=row['year'],
+                            kilometers=row['kilometers'],
+                            fuel_type=row['fuel_type'],
+                            transmission=row['transmission'],
+                            owner_type=row['owner_type'],
+                            mileage=row['mileage'].strip(),
+                            engine=row['engine'],
+                            power=row['power'],
+                            seats=row['seats'],
+                            price=row['price'],
+                            
+                        )
+                    except Exception as e:
+                         print(f"Error importing row {row}, Error: {e}")   
         self.stdout.write(self.style.SUCCESS('Successfully imported cars!'))

@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
+from .models import Car
 
 class EditProfileForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, required=False)
@@ -19,3 +20,13 @@ class EditProfileForm(forms.ModelForm):
             if password != confirm_password:
                 raise forms.ValidationError("Passwords do not match.")
         return cleaned_data
+
+class CarForm(forms.ModelForm):
+    class Meta:
+        model = Car
+        fields = '__all__'
+
+class CustomUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name', 'is_staff']        

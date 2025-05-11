@@ -11,7 +11,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from .models import CartItem, Order
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from .forms import EditProfileForm
+from .forms import EditProfileForm, CarForm, CustomUserForm
 from django.utils import timezone
 from datetime import timedelta
 from django.db import models
@@ -332,3 +332,75 @@ def order_detail(request, order_id):
         'order': order,
         'status_choices': status_choices,
     })
+
+def manage_cars(request):
+    search_query = request.GET.get('search', '')  # Get the search query from the request
+    cars = Car.objects.all()
+
+    if search_query:
+        cars = cars.filter(
+            Q(name__icontains=search_query) |
+            Q(location__icontains=search_query) |
+            Q(fuel_type__icontains=search_query)
+        )
+
+    return render(request, 'cars/manage_cars.html', {'cars': cars})
+
+def add_car(request):
+    if request.method == 'POST':
+        form = CarForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_cars')
+    else:
+        form = CarForm()
+    return render(request, 'cars/car_form.html', {'form': form, 'action': 'Add'})
+
+def edit_car(request, car_id):
+    car = get_object_or_404(Car, id=car_id)
+    if request.method == 'POST':
+        form = CarForm(request.POST, request.FILES, instance=car)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_cars')
+    else:
+        form = CarForm(instance=car)
+    return render(request, 'cars/car_form.html', {'form': form, 'action': 'Edit'})
+
+def delete_car(request, car_id):
+    car = get_object_or_404(Car, id=car_id)
+    car.delete()
+    return redirect('manage_cars')
+
+def manage_users(request):
+    users = User.objects.all()
+    return render(request, 'cars/manage_users.html', {'users': users})
+
+def add_user(request):
+    if request.method == 'POST':
+        form = CustomUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'User added successfully.')
+            return redirect('manage_users')
+    else:
+        form = CustomUserForm()
+    return render(request, 'cars/user_form.html', {'form': form, 'title': 'Add User'})
+
+def edit_user(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    if request.method == 'POST':
+        form = CustomUserForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'User updated successfully.')
+            return redirect('manage_users')
+    else:
+        form = CustomUserForm(instance=user)
+    return render(request, 'cars/user_form.html', {'form': form, 'title': 'Edit User'})
+
+def delete_user(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    user.delete()
+    messages.success(request, 'User deleted successfully.')
+    return redirect('manage_users')

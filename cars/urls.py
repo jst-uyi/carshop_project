@@ -27,5 +27,16 @@ urlpatterns = [
     path('confirm-purchase/', views.confirm_purchase, name='confirm_purchase'),  
 
     path('admin-dashboard/order/<int:order_id>/', views.order_detail, name='order_detail'),
+
+
+    path('manage-cars/', views.manage_cars, name='manage_cars'),
+    path('manage-cars/add/', views.add_car, name='add_car'),
+    path('manage-cars/<int:car_id>/edit/', views.edit_car, name='edit_car'),
+    path('manage-cars/<int:car_id>/delete/', views.delete_car, name='delete_car'),
+
+    path('manage-users/', views.manage_users, name='manage_users'),
+    path('add-user/', views.add_user, name='add_user'),
+    path('edit-user/<int:user_id>/', views.edit_user, name='edit_user'),
+    path('delete-user/<int:user_id>/', views.delete_user, name='delete_user'),
    
 ]
