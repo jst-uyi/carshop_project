@@ -1,0 +1,6 @@
+602d2ae	OSAMUYIME AMADASU	Thu May 15 07:24:48 2025	final updates
+fb48163	jst-uyi	Sun May 11 11:47:42 2025	Updated admin functions
+84fafcb	jst-uyi	Sun May 11 07:58:56 2025	Updated admin dashboard
+19369d0	jst-uyi	Fri May 9 12:56:33 2025	added new functions and corrected errors
+f2bf34a	jst-uyi	Wed May 7 12:02:20 2025	added new pages
+9ecb6ed	jst-uyi	Sun May 4 17:23:09 2025	initial commit of django project
