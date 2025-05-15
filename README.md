@@ -1,7 +1,7 @@
 # Django Car Shop
 
 This is a full-stack Django web application for browsing and purchasing used cars.
- It includes user and admin functionality, custom dashboards, and car management without relying on JavaScript.
+It includes user and admin functionality, custom dashboards, and car management.
 
 
  **Features**
@@ -35,16 +35,19 @@ Admin Features
    python3 -m venv .venv
    source .venv/bin/activate
 
-3. Install required packages
-  pip install -r requirements.txt
+3. Install required packages:         
+    ```bash
+   pip install -r requirements.txt
 
-4. Apply database migrations
+4. Apply database migrations:
+    ```bash
    python manage.py makemigrations
    python manage.py migrate
 
-5. Run development server
+5. Run development server:
+   ```bash
    python manage.py runserver 0.0.0.0:8000
 
    copy Codio box url to browser (e.g https://premiumframe-blocksalami.codio-box.uk)     
-   
+
    
