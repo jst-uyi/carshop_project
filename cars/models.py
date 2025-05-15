@@ -36,6 +36,17 @@ class Car(models.Model):
     description = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='car_images/', blank=True, null=True)  # For uploaded images
 
+    @property
+    def image_url(self):
+        from django.templatetags.static import static
+        if self.image and hasattr(self.image, 'url') and self.image.name:
+            try:
+                url = self.image.url
+                if url:
+                    return url
+            except Exception:
+                pass
+        return static('cars/images/placeholder.png')
 
     def __str__(self):
         return self.name
@@ -89,4 +100,4 @@ class CartItem(models.Model):
         return f"{self.car.name} in cart for {self.user.username}"
 
     def get_total_price(self):
-        return self.car.price * self.quantity    
+        return self.car.price * self.quantity

@@ -15,16 +15,29 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from cars.views import home_view 
 from django.conf import settings
-from django.conf.urls.static import static
+from django.views.static import serve
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_view, name='home'),
     path('', include('cars.urls')),
 ]
 
-if settings.DEBUG:
+# Only add these URL patterns if DEBUG is False and INSECURE_SERVE_STATIC_FILES_BY_DJANGO is True
+# Or if DEBUG is True (though Django's dev server handles it then, this ensures consistency if INSECURE is also True)
+if not settings.DEBUG and getattr(settings, 'INSECURE_SERVE_STATIC_FILES_BY_DJANGO', False):
+    urlpatterns += [
+        re_path(r'^%s(?P<path>.*)$' % settings.MEDIA_URL.lstrip('/'), serve, {
+            'document_root': settings.MEDIA_ROOT,
+        }),
+        re_path(r'^%s(?P<path>.*)$' % settings.STATIC_URL.lstrip('/'), serve, {  # Add this for static files
+            'document_root': settings.STATIC_ROOT,
+        }),
+    ]
+elif settings.DEBUG:
+    from django.conf.urls.static import static
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

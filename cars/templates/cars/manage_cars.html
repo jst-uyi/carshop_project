@@ -41,11 +41,8 @@
                 {% for car in cars %}
                 <tr>
                     <td>
-                        {% if car.image %}
-                            <img src="{{ car.image.url }}" alt="{{ car.name }}" width="80" height="50" class="img-thumbnail">
-                        {% else %}
-                            <span class="text-muted">No image</span>
-                        {% endif %}
+                        {% static 'cars/images/placeholder.png' as placeholder_image_path %}
+                        <img src="{{ car.image_url }}" alt="{% if car.image_url == placeholder_image_path %}No image{% else %}{{ car.name }}{% endif %}" width="80" height="50" class="img-thumbnail">
                     </td>
                     <td>{{ car.name }}</td>
                     <td>${{ car.price }}</td>

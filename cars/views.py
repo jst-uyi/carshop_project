@@ -333,6 +333,7 @@ def order_detail(request, order_id):
         'status_choices': status_choices,
     })
 
+@staff_member_required
 def manage_cars(request):
     search_query = request.GET.get('search', '')  # Get the search query from the request
     cars = Car.objects.all()
