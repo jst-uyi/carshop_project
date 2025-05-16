@@ -30,6 +30,11 @@ Admin Features
 1. Clone the repository or copy the project files into your development environment (e.g., VS Code or Codio).
    git clone https://github.com/jst-uyi/carshop_project.git
 
+
+2.  change directory
+     ```bash
+    cd DjangoProject/car_shop   
+
 2. Create a virtual environment:
    ```bash
    python3 -m venv .venv
