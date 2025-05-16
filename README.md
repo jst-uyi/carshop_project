@@ -31,25 +31,32 @@ Admin Features
    git clone https://github.com/jst-uyi/carshop_project.git
 
 
+
 2.  change directory
      ```bash
     cd DjangoProject/car_shop   
 
 2. Create a virtual environment:
+
+2. ```bash
+   cd DjangoProject/car_shop
+
+3. Create a virtual environment:
+>>>>>>> 412dee77367424fe3b63553f6fd0bcf642ef22df
    ```bash
    python3 -m venv .venv
    source .venv/bin/activate
 
-3. Install required packages:         
+4. Install required packages:         
     ```bash
    pip install -r requirements.txt
 
-4. Apply database migrations:
+5. Apply database migrations:
     ```bash
    python manage.py makemigrations
    python manage.py migrate
 
-5. Run development server:
+6. Run development server:
    ```bash
    python manage.py runserver 0.0.0.0:8000
 
