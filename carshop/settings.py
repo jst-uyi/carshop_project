@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-p&y**rl%-4&fkc2-^_(9!^a-v1-xv2ym8%d7sm1ld0*oc3vbkc
 DEBUG = False
 
 ALLOWED_HOSTS = ['carshop-1rj1.onrender.com', 'localhost', '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['https://premiumframe-blocksalami-8000.codio-box.uk']
+CSRF_TRUSTED_ORIGINS = ['https://premiumframe-blocksalami-8000.codio-box.uk',
+                       'https://carshop-1rj1.onrender.com',]
 # Allow Django to serve media files even in production mode (DEBUG=False) for local testing
 INSECURE_SERVE_STATIC_FILES_BY_DJANGO = True
 
