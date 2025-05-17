@@ -34,7 +34,7 @@ class Car(models.Model):
     seats = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='car_images/', blank=True, null=True)  # For uploaded images
+    image = models.ImageField(upload_to='staticfiles/car_images/', blank=True, null=True)  # For uploaded images
 
     @property
     def image_url(self):
