@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-p&y**rl%-4&fkc2-^_(9!^a-v1-xv2ym8%d7sm1ld0*oc3vbkc'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['carshop-1rj1.onrender.com', 'localhost', '127.0.0.1']
 CSRF_TRUSTED_ORIGINS = ['https://premiumframe-blocksalami-8000.codio-box.uk',
