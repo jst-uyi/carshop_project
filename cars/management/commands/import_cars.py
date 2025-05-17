@@ -5,8 +5,8 @@ from cars.models import Car
 class Command(BaseCommand):
     help = 'Imports cars from CSV file'
 
-    #def add_arguments(self, parser):
-        #parser.add_argument('file_path', type=str, help='Path to the CSV file')
+    def add_arguments(self, parser):
+        parser.add_argument('file_path', type=str, help='Path to the CSV file')
 
     def handle(self, *args, **options):
         with open('data/cars.csv', 'r', encoding='ISO-8859-1') as file:
