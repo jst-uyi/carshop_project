@@ -1,6 +1,8 @@
 import csv
 from django.core.management.base import BaseCommand
 from cars.models import Car
+from decimal import Decimal, InvalidOperation
+
 
 class Command(BaseCommand):
     help = 'Imports cars from CSV file'
@@ -25,6 +27,12 @@ class Command(BaseCommand):
                 raise ValueError(f'Missing columns in CSV: {", ".join(missing_columns)}')
             for row in reader:
                     try:
+                        price_str = row['price'].strip()
+                        if not price_str:
+                            raise ValueError("Missing price")
+
+                        price = Decimal(price_str)
+
                         Car.objects.create(
                             #serial_number=row['serial_number'],
                             name=row['name'],
@@ -38,9 +46,11 @@ class Command(BaseCommand):
                             engine=row['engine'],
                             power=row['power'],
                             seats=row['seats'],
-                            price=row['price'],
+                            price=price,
                             
                         )
-                    except Exception as e:
-                         print(f"Error importing row {row}, Error: {e}")   
+                    except (InvalidOperation, ValueError) as e:
+        print(f"Skipping row {row['serial_number']} due to invalid price: {row['price']} — Error: {e}")
+    except Exception as e:
+        print(f"Error importing row {row}, Error: {e}")  
         self.stdout.write(self.style.SUCCESS('Successfully imported cars!'))
