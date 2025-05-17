@@ -11,21 +11,22 @@ class Command(BaseCommand):
         parser.add_argument('file_path', type=str, help='Path to the CSV file')
 
     def handle(self, *args, **options):
-        with open('data/cars.csv', 'r', encoding='ISO-8859-1') as file:
-            reader = csv.DictReader(file)
-            print(reader.fieldnames[0])
-            reader.fieldnames[0] = 'serial_number'
-            print(reader.fieldnames[0])
-            # Check if the required columns are present in the CSV
-            # If not, raise an error
-            required_columns = [
-                'name', 'location', 'year', 'kilometers', 'fuel_type',
-                'transmission', 'owner_type', 'mileage', 'engine', 'power', 'seats', 'price'
-            ]
-            missing_columns = [col for col in required_columns if col not in reader.fieldnames]
-            if missing_columns:
-                raise ValueError(f'Missing columns in CSV: {", ".join(missing_columns)}')
-            for row in reader:
+        try:
+            with open('data/cars.csv', 'r', encoding='ISO-8859-1') as file:
+                reader = csv.DictReader(file)
+                print(reader.fieldnames[0])
+                reader.fieldnames[0] = 'serial_number'
+                print(reader.fieldnames[0])
+
+                required_columns = [
+                    'name', 'location', 'year', 'kilometers', 'fuel_type',
+                    'transmission', 'owner_type', 'mileage', 'engine', 'power', 'seats', 'price'
+                ]
+                missing_columns = [col for col in required_columns if col not in reader.fieldnames]
+                if missing_columns:
+                    raise ValueError(f'Missing columns in CSV: {", ".join(missing_columns)}')
+
+                for row in reader:
                     try:
                         price_str = row['price'].strip()
                         if not price_str:
@@ -34,7 +35,7 @@ class Command(BaseCommand):
                         price = Decimal(price_str)
 
                         Car.objects.create(
-                            #serial_number=row['serial_number'],
+                            # serial_number=row['serial_number'],
                             name=row['name'],
                             location=row['location'],
                             year=row['year'],
@@ -47,10 +48,12 @@ class Command(BaseCommand):
                             power=row['power'],
                             seats=row['seats'],
                             price=price,
-                            
                         )
                     except (InvalidOperation, ValueError) as e:
-        print(f"Skipping row {row['serial_number']} due to invalid price: {row['price']} — Error: {e}")
-    except Exception as e:
-        print(f"Error importing row {row}, Error: {e}")  
-        self.stdout.write(self.style.SUCCESS('Successfully imported cars!'))
+                        print(f"Skipping row {row.get('serial_number', 'N/A')} due to invalid price: {row['price']} — Error: {e}")
+                    except Exception as e:
+                        print(f"Error importing row {row}, Error: {e}")
+
+            self.stdout.write(self.style.SUCCESS('Successfully imported cars!'))
+        except Exception as e:
+            print(f"Unexpected error opening or reading the file: {e}")
