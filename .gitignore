@@ -5,9 +5,7 @@ __pycache__/
 *.log
 
 # Django-specific
-/staticfiles/
-/media/
-/db.sqlite3
+
 
 # VS Code
 .vscode/
