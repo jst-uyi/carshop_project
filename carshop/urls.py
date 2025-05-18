@@ -19,6 +19,7 @@ from django.urls import path, include, re_path
 from cars.views import home_view 
 from django.conf import settings
 from django.views.static import serve
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
