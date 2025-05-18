@@ -3,7 +3,7 @@ services:
     name: carshop
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn carshop_project.wsgi:application
+    startCommand: gunicorn carshop.wsgi
     staticPublishPath: static
     envVars:
       - key: DJANGO_SETTINGS_MODULE
